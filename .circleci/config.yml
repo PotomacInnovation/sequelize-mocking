@@ -20,5 +20,5 @@ workflows:
   version: 2
   commit-workflow:
     jobs:
-      - secret-check
+      - secret-check:
           context: deployment
