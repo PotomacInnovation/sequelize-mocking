@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  secret-check:
+    working_directory: ~/src
+    docker:
+      - image: upsidetravel-docker.jfrog.io/docker-git-secrets:latest
+        auth:
+          username: $ARTIFACTORY_USERNAME
+          password: $ARTIFACTORY_PASSWORD
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Setup search terms
+          command: ~/git-secrets-patterns.sh
+      - checkout
+      - run:
+          name: Look for secrets
+          command: git secrets --scan -r *
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - secret-check
+          context: deployment
